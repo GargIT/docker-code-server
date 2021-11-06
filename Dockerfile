@@ -25,6 +25,18 @@ RUN \
   apt-get update && \
   apt-get install -y \
     build-essential \
+    autoconf \
+    automake \
+    libtool \
+    flex \
+    bison \
+    libssl-dev \
+    libgettextpo-dev \
+    libboost-dev \
+    libpq-dev \
+    zlib1g-dev \
+    libcurl4 \
+    libcurl4-openssl-dev \
     libx11-dev \
     libxkbfile-dev \
     libsecret-1-dev \
@@ -34,9 +46,14 @@ RUN \
     git \
     jq \
     nano \
+    cat \
     net-tools \
     nodejs \
     sudo \
+    htop \
+    apache2 \
+    rsync \
+    tomcat9 \
     yarn && \
   echo "**** install code-server ****" && \
   if [ -z ${CODE_RELEASE+x} ]; then \
@@ -50,6 +67,11 @@ RUN \
   echo "**** clean up ****" && \
   apt-get purge --auto-remove -y \
     build-essential \
+    autoconf \
+    automake \
+    libtool \
+    flex \
+    bison \
     libx11-dev \
     libxkbfile-dev \
     libsecret-1-dev \
