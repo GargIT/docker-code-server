@@ -5,7 +5,7 @@ ARG BUILD_DATE
 ARG VERSION
 ARG CODE_RELEASE
 LABEL build_version="Linuxserver.io version:- ${VERSION} Build-date:- ${BUILD_DATE}"
-LABEL maintainer="aptalca"
+LABEL maintainer="GargIT"
 
 # environment settings
 ENV HOME="/config"
@@ -27,11 +27,14 @@ RUN \
     build-essential \
     autoconf \
     automake \
+    autopoint \
     libtool \
     flex \
     bison \
     libssl-dev \
+    gettext \
     libgettextpo-dev \
+    libjansson-dev \
     libboost-dev \
     libpq-dev \
     zlib1g-dev \
@@ -40,13 +43,13 @@ RUN \
     libx11-dev \
     libxkbfile-dev \
     libsecret-1-dev \
+    default-jre \
     pkg-config && \
   echo "**** install runtime dependencies ****" && \
   apt-get install -y \
     git \
     jq \
     nano \
-    cat \
     net-tools \
     nodejs \
     sudo \
@@ -54,6 +57,7 @@ RUN \
     apache2 \
     rsync \
     tomcat9 \
+    unzip \
     yarn && \
   echo "**** install code-server ****" && \
   if [ -z ${CODE_RELEASE+x} ]; then \
@@ -65,25 +69,27 @@ RUN \
   yarn --production --verbose --frozen-lockfile global add code-server@"$CODE_VERSION" && \
   yarn cache clean && \
   echo "**** clean up ****" && \
-  apt-get purge --auto-remove -y \
-    build-essential \
-    autoconf \
-    automake \
-    libtool \
-    flex \
-    bison \
-    libx11-dev \
-    libxkbfile-dev \
-    libsecret-1-dev \
-    pkg-config && \
+  apt-get autoremove -y && \
   apt-get clean && \
   rm -rf \
     /tmp/* \
     /var/lib/apt/lists/* \
     /var/tmp/*
 
+RUN \
+  echo "**** install sencha ****" && \
+  curl -o /cmd.run.zip https://cdn.sencha.com/cmd/7.3.1.27/no-jre/SenchaCmd-7.3.1.27-linux-amd64.sh.zip && \
+  unzip -p /cmd.run.zip > /cmd-install.run && \
+  chmod +x /cmd-install.run && \
+  /cmd-install.run -q -dir /opt/Sencha/Cmd/7.3.1.27 && \
+  rm /cmd-install.run /cmd.run.zip && \
+  sed -i "s/^\-Xmx.*/\-Xmx2096m/" /opt/Sencha/Cmd/7.3.1.27/sencha.vmoptions
+
+ENV PATH=$PATH:$HOME/workspace:/opt/Sencha/Cmd
 # add local files
 COPY /root /
+COPY /usr /
 
 # ports and volumes
 EXPOSE 8443
+# EXPOSE 80
