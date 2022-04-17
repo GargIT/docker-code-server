@@ -55,6 +55,7 @@ RUN \
     sudo \
     htop \
     apache2 \
+    apache2-utils \
     rsync \
     tomcat9 \
     unzip \
@@ -92,4 +93,4 @@ COPY /usr /
 
 # ports and volumes
 EXPOSE 8443
-# EXPOSE 80
+EXPOSE 80

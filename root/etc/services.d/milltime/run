@@ -1,0 +1,6 @@
+#!/usr/bin/with-contenv sh
+
+#exec /config/workspace/src/service/milltime_service -DFOREGROUND;
+exec \
+    s6-setuidgid abc \
+        /config/workspace/src/service/milltime_service
